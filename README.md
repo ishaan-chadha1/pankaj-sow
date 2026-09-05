@@ -28,6 +28,16 @@ Or push to GitHub and import the repo at vercel.com/new.
 The page is marked `noindex`: a client proposal has no business turning up in
 search results. Anyone with the link can read it, so treat the URL as private.
 
+## Save it as a PDF
+
+Open **Read it all**, then **Save as PDF**. In the browser's print dialogue set
+the destination to *Save as PDF* and switch **Background graphics** on — without
+it the hour badges, the rules and the accent colour are dropped.
+
+A4, one section per page, and nothing splits across a page break. Chrome gives
+the cleanest result; Safari adds its own header and footer unless you turn them
+off in the dialogue.
+
 ## Change the numbers
 
 Edit `lib/proposal.ts`. Adding or removing a workstream re-totals the hours and

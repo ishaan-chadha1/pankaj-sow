@@ -196,9 +196,14 @@ export default function Deck() {
             <p className="lab">
               {DOC.kind} &nbsp;&middot;&nbsp; {DOC.ref}
             </p>
-            <button type="button" className="btn" onClick={() => setAll(false)}>
-              Step through
-            </button>
+            <span className="bar-acts">
+              <button type="button" className="btn" onClick={() => setAll(false)}>
+                Step through
+              </button>
+              <button type="button" className="btn btn-solid" onClick={() => window.print()}>
+                Save as PDF
+              </button>
+            </span>
           </div>
         </div>
         <div className="all">

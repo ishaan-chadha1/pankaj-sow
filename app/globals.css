@@ -197,5 +197,57 @@ tfoot td { border-bottom: 0; border-top: 2px solid var(--ink); font-weight: 500;
 .all section + section { border-top: 1px solid var(--rule); margin-top: 40px; }
 
 :focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
-@media print { .bar, .nav { display: none; } .step { animation: none; } }
 @media (prefers-reduced-motion: reduce) { * { animation: none !important; transition: none !important; } }
+
+/* ── print / save as PDF ──────────────────────────────────────────
+   Driven from the "Read it all" view. Browsers strip backgrounds by default,
+   which would take the hour badges, the rules and the accent with them — so
+   colour adjustment is forced on, and everything below is set in points
+   because a PDF has a physical page, not a viewport. */
+@media print {
+  @page { size: A4; margin: 16mm 15mm; }
+
+  *, *::before, *::after {
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  html, body { background: #fff; }
+  body { font-size: 10.5pt; line-height: 1.5; }
+
+  .bar, .nav { display: none !important; }
+  .deck { min-height: 0; display: block; }
+  .all { max-width: none; margin: 0; padding: 0; }
+  .step { animation: none; }
+
+  /* One section per page. Each is a self-contained part of the document, and
+     a heading stranded at the foot of a page reads as a mistake. */
+  .all section { padding-top: 0; }
+  .all section + section {
+    break-before: page;
+    border-top: 0;
+    margin-top: 0;
+  }
+
+  /* Nothing that reads as one object may be split down the middle. */
+  .item, .wk, .list li, tr, .fig, .total { break-inside: avoid; }
+  h1, h2, h3 { break-after: avoid; }
+  /* If the pricing table does run over, the column headings come with it. */
+  thead { display: table-header-group; }
+
+  .cover h1 { font-size: 26pt; line-height: 1.08; }
+  .cover .lede { font-size: 12pt; max-width: none; }
+  .step h2 { font-size: 19pt; margin-bottom: 14pt; }
+  .item h3, .wk h3 { font-size: 12pt; }
+  .fig .v { font-size: 15pt; }
+  .total .amt { font-size: 16pt; }
+  .item li, .wk p, .list li, td, .item .hrs { font-size: 9.5pt; }
+  .lab { font-size: 7.5pt; }
+
+  /* Links print as plain text; a PDF cannot be clicked through to anything
+     useful here anyway. */
+  a { text-decoration: none; color: inherit; }
+}
+
+.bar-acts { display: flex; gap: 8px; margin-left: auto; }
+@media (max-width: 460px) { .bar .btn { padding: 11px 10px; letter-spacing: 0.1em; } }
