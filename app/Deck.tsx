@@ -5,16 +5,17 @@ import {
   DOC, FIGURES, PROVIDE, RATE, TERMS, TOTAL_FEE, TOTAL_HOURS, WEEKS, WORK, money,
 } from "@/lib/proposal";
 
-/* ── the parts, each of which is one screen of the deck ────────────────── */
+/* One step per section of the document, and nothing that is not in it. */
 
 function Cover() {
   return (
     <div className="cover">
       <p className="lab lab-a">
-        {DOC.kind} &nbsp;/&nbsp; {DOC.ref}
+        {DOC.kind} &nbsp;&middot;&nbsp; {DOC.ref}
       </p>
       <h1>{DOC.headline}</h1>
       <p className="lede">{DOC.lede}</p>
+
       <dl>
         <div>
           <dt className="lab">For</dt>
@@ -33,14 +34,7 @@ function Cover() {
           <dd className="num">{DOC.validUntil}</dd>
         </div>
       </dl>
-    </div>
-  );
-}
 
-function Numbers() {
-  return (
-    <>
-      <h2>The shape of it</h2>
       <div className="figs">
         {FIGURES.map((f) => (
           <div className="fig" key={f.k}>
@@ -50,20 +44,16 @@ function Numbers() {
           </div>
         ))}
       </div>
-    </>
+    </div>
   );
 }
 
-function Scope({ from, to, part }: { from: number; to: number; part: string }) {
+function Built() {
   return (
     <>
       <h2>What will be built</h2>
-      <p className="intro">
-        {part} &mdash; {WORK.slice(from, to).reduce((n, w) => n + w.hours, 0)} of the{" "}
-        {TOTAL_HOURS} hours.
-      </p>
       <div className="work">
-        {WORK.slice(from, to).map((w) => (
+        {WORK.map((w) => (
           <article className="item" key={w.name}>
             <div className="item-h">
               <h3>{w.name}</h3>
@@ -81,17 +71,48 @@ function Scope({ from, to, part }: { from: number; to: number; part: string }) {
   );
 }
 
-function Fee() {
+function Pricing() {
   return (
     <>
-      <h2>The number</h2>
-      <div className="fee">
-        <p className="lab lab-a">Total</p>
-        <div className="amt">{money(TOTAL_FEE)}</div>
-        <p className="sub">
-          {TOTAL_HOURS} hours at {money(RATE)} per hour &mdash; 16 working days at five hours a day.
-        </p>
+      <h2>Pricing</h2>
+
+      <div className="tbl">
+        <table>
+          <thead>
+            <tr>
+              <th>Item</th>
+              <th className="r">Hours</th>
+            </tr>
+          </thead>
+          <tbody>
+            {WORK.map((w) => (
+              <tr key={w.name}>
+                <td>{w.name}</td>
+                <td className="r num">{w.hours}</td>
+              </tr>
+            ))}
+          </tbody>
+          <tfoot>
+            <tr>
+              <td>Total</td>
+              <td className="r num">{TOTAL_HOURS}</td>
+            </tr>
+          </tfoot>
+        </table>
       </div>
+
+      <div className="total">
+        <span className="lab">
+          {TOTAL_HOURS} hours at {money(RATE)} per hour
+        </span>
+        <span className="amt num">{money(TOTAL_FEE)}</span>
+      </div>
+
+      <ul className="list">
+        {TERMS.map((t) => (
+          <li key={t}>{t}</li>
+        ))}
+      </ul>
     </>
   );
 }
@@ -99,7 +120,7 @@ function Fee() {
 function Timeline() {
   return (
     <>
-      <h2>Four weeks</h2>
+      <h2>Timeline</h2>
       <div>
         {WEEKS.map((w) => (
           <div className="wk" key={w.when}>
@@ -122,28 +143,11 @@ function Provide() {
   return (
     <>
       <h2>What you provide</h2>
-      <p className="intro">
-        The date holds if these arrive on time. The Razorpay application is the one to start
-        first &mdash; it waits on someone else&rsquo;s queue, not on us.
-      </p>
       <ul className="list">
         {PROVIDE.map((p) => (
           <li key={p.when}>
             <b>{p.when}</b> &mdash; {p.text}
           </li>
-        ))}
-      </ul>
-    </>
-  );
-}
-
-function Terms() {
-  return (
-    <>
-      <h2>The commercials</h2>
-      <ul className="list">
-        {TERMS.map((t) => (
-          <li key={t}>{t}</li>
         ))}
       </ul>
     </>
@@ -176,17 +180,12 @@ function Accept() {
 
 const STEPS: { label: string; node: React.ReactNode }[] = [
   { label: "Cover", node: <Cover /> },
-  { label: "The shape of it", node: <Numbers /> },
-  { label: "What will be built, 1", node: <Scope from={0} to={5} part="First five" /> },
-  { label: "What will be built, 2", node: <Scope from={5} to={10} part="Last five" /> },
-  { label: "The number", node: <Fee /> },
-  { label: "Four weeks", node: <Timeline /> },
+  { label: "What will be built", node: <Built /> },
+  { label: "Pricing", node: <Pricing /> },
+  { label: "Timeline", node: <Timeline /> },
   { label: "What you provide", node: <Provide /> },
-  { label: "The commercials", node: <Terms /> },
   { label: "Acceptance", node: <Accept /> },
 ];
-
-/* ── the deck ──────────────────────────────────────────────────────────── */
 
 export default function Deck() {
   const [i, setI] = useState(0);
@@ -197,22 +196,18 @@ export default function Deck() {
     window.scrollTo({ top: 0, behavior: "instant" });
   }, []);
 
-  // Arrow keys and space, the way anyone reads a deck. Ignored while the
+  // Arrow keys and space, the way anyone reads a deck. Off while the
   // all-on-one-page view is open, where the page scrolls instead.
   useEffect(() => {
     if (all) return;
     const onKey = (e: KeyboardEvent) => {
       if (e.metaKey || e.ctrlKey || e.altKey) return;
-      if (e.key === "ArrowRight" || e.key === "PageDown" || e.key === " ") {
-        e.preventDefault();
-        setI((n) => Math.min(STEPS.length - 1, n + 1));
-        window.scrollTo({ top: 0, behavior: "instant" });
-      }
-      if (e.key === "ArrowLeft" || e.key === "PageUp") {
-        e.preventDefault();
-        setI((n) => Math.max(0, n - 1));
-        window.scrollTo({ top: 0, behavior: "instant" });
-      }
+      const fwd = e.key === "ArrowRight" || e.key === "PageDown" || e.key === " ";
+      const back = e.key === "ArrowLeft" || e.key === "PageUp";
+      if (!fwd && !back) return;
+      e.preventDefault();
+      setI((n) => Math.max(0, Math.min(STEPS.length - 1, n + (fwd ? 1 : -1))));
+      window.scrollTo({ top: 0, behavior: "instant" });
     };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
@@ -224,7 +219,7 @@ export default function Deck() {
         <div className="bar">
           <div className="bar-in">
             <p className="lab">
-              {DOC.kind} &nbsp;/&nbsp; {DOC.ref}
+              {DOC.kind} &nbsp;&middot;&nbsp; {DOC.ref}
             </p>
             <button type="button" className="btn" onClick={() => setAll(false)}>
               Step through
@@ -240,15 +235,12 @@ export default function Deck() {
     );
   }
 
-  const first = i === 0;
-  const last = i === STEPS.length - 1;
-
   return (
     <div className="deck">
       <div className="bar">
         <div className="bar-in">
           <p className="lab">
-            {DOC.kind} &nbsp;/&nbsp; {DOC.ref}
+            {DOC.kind} &nbsp;&middot;&nbsp; {DOC.ref}
           </p>
           <div className="ticks">
             {STEPS.map((s, n) => (
@@ -271,7 +263,7 @@ export default function Deck() {
 
       <div className="stage">
         {/* Keyed so React remounts on every step — which is what replays the
-            entry animation instead of swapping the text under a static frame. */}
+            entry animation instead of swapping text under a static frame. */}
         <div className="step" key={i}>
           {STEPS[i].node}
         </div>
@@ -279,7 +271,7 @@ export default function Deck() {
 
       <div className="nav">
         <div className="nav-in">
-          <button type="button" className="btn" onClick={() => go(i - 1)} disabled={first}>
+          <button type="button" className="btn" onClick={() => go(i - 1)} disabled={i === 0}>
             Back
           </button>
           <span className="count">
@@ -289,9 +281,9 @@ export default function Deck() {
             type="button"
             className="btn btn-solid"
             onClick={() => go(i + 1)}
-            disabled={last}
+            disabled={i === STEPS.length - 1}
           >
-            {last ? "End" : "Next"}
+            {i === STEPS.length - 1 ? "End" : "Next"}
           </button>
         </div>
       </div>

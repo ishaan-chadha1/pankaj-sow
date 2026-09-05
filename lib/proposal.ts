@@ -12,12 +12,12 @@ export const DOC = {
   studio: "Ishaan Chadha",
   issued: "5 September 2026",
   validUntil: "19 September 2026",
-  headline: "An online store, built properly.",
-  lede: "A complete shop that takes payments, with the checkout on your own site from first look to last click.",
+  headline: "Pankaj Soni — online store",
+  lede: "A complete shop that takes payments, with the checkout on your own site, live by the first of October.",
 };
 
 export const FIGURES = [
-  { k: "Engagement", v: "80 hrs", n: "16 working days × 5" },
+  { k: "Hours", v: "80", n: "16 days × 5 hrs" },
   { k: "Rate", v: "₹3,000", n: "per hour" },
   { k: "Total", v: "₹2,40,000", n: "for the work below" },
   { k: "Live", v: "1 Oct", n: "Thursday, 2026" },

@@ -174,3 +174,27 @@ h1, h2, h3 { font-family: var(--font-display), Georgia, serif; font-weight: 400;
 @media (prefers-reduced-motion: reduce) {
   * { animation: none !important; transition: none !important; }
 }
+
+/* ── pricing table ────────────────────────────────────────────── */
+.tbl { width: 100%; overflow-x: auto; }
+table { width: 100%; border-collapse: collapse; font-size: 13.5px; min-width: 420px; }
+th {
+  font-family: var(--font-mono), monospace; font-size: 9.5px; letter-spacing: 0.14em;
+  text-transform: uppercase; color: var(--ink-3); font-weight: 500; text-align: left;
+  padding: 0 14px 9px 0; border-bottom: 1px solid var(--ink);
+}
+td { padding: 12px 14px 12px 0; border-bottom: 1px solid var(--rule); color: var(--ink-2); }
+td:first-child { color: var(--ink); font-weight: 400; }
+.r { text-align: right; padding-right: 0; }
+th.r { padding-right: 0; }
+tfoot td { border-bottom: 0; border-top: 2px solid var(--ink); font-weight: 500; color: var(--ink); padding-top: 13px; }
+
+.total {
+  display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between;
+  gap: 12px; margin-top: 26px; padding-top: 18px; border-top: 2px solid var(--ink);
+}
+.total .amt {
+  font-family: var(--font-mono), monospace; font-variant-numeric: tabular-nums;
+  font-size: clamp(1.5rem, 4vw, 1.9rem); font-weight: 500; letter-spacing: -0.02em; color: var(--ink);
+}
+.total + .list { margin-top: 30px; }
