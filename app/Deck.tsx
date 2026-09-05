@@ -40,7 +40,7 @@ function Cover() {
           <div className="fig" key={f.k}>
             <p className="lab">{f.k}</p>
             <div className="v">{f.v}</div>
-            <div className="n">{f.n}</div>
+            {f.n ? <div className="n">{f.n}</div> : null}
           </div>
         ))}
       </div>
@@ -154,37 +154,12 @@ function Provide() {
   );
 }
 
-function Accept() {
-  return (
-    <>
-      <h2>Acceptance</h2>
-      <p className="intro">
-        Signing accepts this document in full. Valid until{" "}
-        <span className="num">{DOC.validUntil}</span>.
-      </p>
-      <div className="sign">
-        <div>
-          <p className="lab">For the client</p>
-          <div className="line" />
-          <div className="who">{DOC.client} &nbsp;&middot;&nbsp; date</div>
-        </div>
-        <div>
-          <p className="lab">For the studio</p>
-          <div className="line" />
-          <div className="who">{DOC.studio} &nbsp;&middot;&nbsp; date</div>
-        </div>
-      </div>
-    </>
-  );
-}
-
 const STEPS: { label: string; node: React.ReactNode }[] = [
   { label: "Cover", node: <Cover /> },
   { label: "What will be built", node: <Built /> },
   { label: "Pricing", node: <Pricing /> },
   { label: "Timeline", node: <Timeline /> },
   { label: "What you provide", node: <Provide /> },
-  { label: "Acceptance", node: <Accept /> },
 ];
 
 export default function Deck() {

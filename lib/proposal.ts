@@ -16,8 +16,8 @@ export const DOC = {
   lede: "A complete shop that takes payments, with the checkout on your own site, live by the first of October.",
 };
 
-export const FIGURES = [
-  { k: "Hours", v: "80", n: "16 days × 5 hrs" },
+export const FIGURES: { k: string; v: string; n?: string }[] = [
+  { k: "Hours", v: "80" },
   { k: "Rate", v: "₹3,000", n: "per hour" },
   { k: "Total", v: "₹2,40,000", n: "for the work below" },
   { k: "Live", v: "1 Oct", n: "Thursday, 2026" },
