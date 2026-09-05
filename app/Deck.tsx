@@ -156,10 +156,10 @@ function Provide() {
 
 const STEPS: { label: string; node: React.ReactNode }[] = [
   { label: "Cover", node: <Cover /> },
+  { label: "What you provide", node: <Provide /> },
   { label: "What will be built", node: <Built /> },
   { label: "Pricing", node: <Pricing /> },
   { label: "Timeline", node: <Timeline /> },
-  { label: "What you provide", node: <Provide /> },
 ];
 
 export default function Deck() {
